@@ -256,8 +256,8 @@ class ChargeAdmin(AppendOnlyModelAdmin):
 class ChargeInline(admin.TabularInline):
     verbose_name_plural = 'Charges and Credits'
     model = Charge
-    fields = readonly_fields = ['type', created_on, link_to_invoice, amount, 'product_code', product_properties,
-                                'ad_hoc_label']
+    readonly_fields = ['type', created_on, 'invoice', amount, product_properties]
+    fields = ['type', created_on, 'account', 'invoice', 'amount', 'product_code', product_properties, 'ad_hoc_label']
     show_change_link = True
     can_delete = False
     extra = 0
@@ -266,6 +266,8 @@ class ChargeInline(admin.TabularInline):
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related('product_properties')
 
+    def has_change_permission(self, request, obj=None):
+        return False
 
 #############################################################
 # Transactions
